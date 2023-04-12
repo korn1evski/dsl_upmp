@@ -14,24 +14,51 @@
 }
 body{
   font-family: Inter, serif;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
+@keyframes bounce-left-to-right {
+  0%, 100% {
+    transform: translateX(-10%);
+  }
+  50% {
+    transform: translateX(10%);
+  }
+}
+
+.arrow_anim {
+  animation: bounce-left-to-right 1s infinite;
+}
+
+/*.leftMenu{*/
+/*  background-image: url("./assets/menu_gradient.png");*/
+/*  background-color: #000;*/
+/*}*/
+
 .dark{
+  --image-back-primary: url("./assets/menu_gradient.png");
   --color-bg-primary: #2d3748;
   --color-bg-secondary: #283141;
-  --color-text-primary: #dbdbdb;
+  --color-text-primary: #fff;
   --color-text-secondary: #e2e9f0;
   --color-text-accent: #81e6d9;
   --color-bg-input: #4a5361;
   --color-bg-button: #81e6d9;
+  --color-bg-menu1: #1f1d1d;
+  --color-bg-menu2: #391802;
 }
 
 .light{
+  --image-back-primary: url("./assets/menu_gradient.png");
   --color-bg-primary: #fff;
   --color-bg-secondary: #edf2f7;
-  --color-text-primary: #2d3748;
+  --color-text-primary: #000;
   --color-text-secondary: #4a5568;
   --color-text-accent: #2b6cb0;
   --color-bg-input: #edf2f7;
   --color-bg-button: #2b6cb0;
+  --color-bg-menu1: #fff;
+  --color-bg-menu2: #95c5f9;
 }
