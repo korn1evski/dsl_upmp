@@ -48,6 +48,7 @@ body{
   --color-bg-button: #81e6d9;
   --color-bg-menu1: #1f1d1d;
   --color-bg-menu2: #391802;
+  --color-bg-mini: #1a0d00;
 }
 
 .light{
@@ -61,4 +62,5 @@ body{
   --color-bg-button: #2b6cb0;
   --color-bg-menu1: #fff;
   --color-bg-menu2: #95c5f9;
+  --color-bg-mini: #a7c3e1;
 }
