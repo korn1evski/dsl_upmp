@@ -17,6 +17,8 @@ function App() {
       setIsShown(true);
   });
 
+
+  
   // style={{backgroundImage: require("./assets/menu_gradient.png")}}
 
   return <ThemeProvider>
