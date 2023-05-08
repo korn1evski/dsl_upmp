@@ -4,19 +4,21 @@ from lxml import html
 from flask import Flask
 from flask import Flask, request, jsonify
 from flask_cors import CORS 
-
+from search import search
 import requests
 
 app = Flask(__name__)
 CORS(app)
 
 
+ 
 @app.route('/api',methods=['POST','GET'])
 def home():
     content_type = request.headers.get('Content-Type')
     if (content_type == 'application/json'):
         input_data = request.json.get('input')
-        response = jsonify({'output': input_data})
+        output = search(input_data)
+        response = jsonify({'output': output})
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
     else:
