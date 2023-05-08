@@ -6,15 +6,16 @@ import Burger from "../components/Burger";
 import TopSearch from "../components/topSearch";
 import MusicRes from "../components/MusicRes";
 import MiniPlayer from "../components/MiniPlayer";
-import {DEVICE_ID} from "../spotify_keys.js"
 import axios from "axios";
-import {CLIENT_ID, CLIENT_SECRET} from "../spotify_keys.js"
+import {CLIENT_ID, CLIENT_SECRET, DEVICE_ID} from "../spotify_keys.js"
 
 function Search({isShown, setIsShown}) {
 
-    const {theme, setTheme, setPlayingUri, playingUri, setPlayingName, setPlayingAuthor, setPlayingImage, contextAccessToken, setcontextAccessToken, setIsPlaying} = useContext(ThemeContext);
+    const {theme, setTheme, setPlayingUri, playingUri, setPlayingName, setPlayingAuthor, setPlayingImage, contextAccessToken, setcontextAccessToken, isPlaying, setIsPlaying, playerDuration, setPlayerDuration, playingProgress, setPlayingProgress} = useContext(ThemeContext);
     const [searchResult, setSearchResult] = useState([]);
     const [isSearching, setIsSearching] = useState(false);
+    const [liked, setLiked] = useState([]);
+    let timerInterval;
 
     const scope = 'user-read-currently-playing user-modify-playback-state user-read-playback-state streaming';
     const SCOPE = 'user-read-playback-state user-modify-playback-state';
@@ -26,6 +27,17 @@ function Search({isShown, setIsShown}) {
         scope: SCOPE,
     });
 
+    const receiveFav = async(id) => {
+        const requestOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+            body: JSON.stringify({input: id})
+        };
+
+        const response = await fetch('http://127.0.0.1:5000/api/data', requestOptions);
+        const data = await response.json();
+        setLiked(data.output)
+    }
 
     useEffect(() => {
         const url = window.location.href;
@@ -50,6 +62,8 @@ function Search({isShown, setIsShown}) {
         if(code != null){
             fetchData()
         }
+
+        receiveFav("")
     }, [])
 
     const addSongToQueue = async (uri) => {
@@ -72,11 +86,10 @@ function Search({isShown, setIsShown}) {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
-            },
-            body: `uri=${uri}&device_id=${DEVICE_ID}`,
+            }
         };
 
-        fetch('https://api.spotify.com/v1/me/player/queue', param)
+        fetch(`https://api.spotify.com/v1/me/player/queue?uri=${uri}&device_id=${DEVICE_ID}`, param)
             .then(result => result.json())
             .then(data => {
                 console.log(data)
@@ -116,23 +129,42 @@ function Search({isShown, setIsShown}) {
                                 const totalSeconds = Math.floor(result.duration_ms / 1000);
                                 const minutes = Math.floor(totalSeconds / 60);
                                 const seconds = totalSeconds % 60;
-                                return (<div key={result.id} onClick={() => {
+                                return (<div key={result.id} onClick={async () => {
                                     setPlayingUri(result.uri)
                                     setPlayingName(result.name)
                                     setPlayingAuthor(result.artists[0].name)
                                     setPlayingImage(result.album.images[0].url)
                                     setIsPlaying(true)
-                                    addSongToQueue(result.uri)
-                                    // skipToNext()
+                                    setPlayerDuration(result.duration_ms)
+                                    setPlayingProgress(0)
+                                    // let temp = 0
+                                    // timerInterval = setInterval(() => {
+                                    //         if(temp == 100){
+                                    //             setPlayingProgress(0)
+                                    //             clearInterval(timerInterval);
+                                    //         }
+                                    //         if(isPlaying) {
+                                    //             console.log(isPlaying)
+                                    //             setPlayingProgress(temp++)
+                                    //         }
+                                    //     }, result.duration_ms / 100);
 
-                                }}><MusicRes key={result.id} name={result.name} author={result.artists[0].name}
+                                    await addSongToQueue(result.uri)
+                                    setTimeout(async () => {
+                                        await skipToNext()
+                                    }, 1000);
+
+                                }}><MusicRes key={result.id} id = {result.id} name={result.name} author={result.artists[0].name}
                                              image={result.album.images[0].url}
-                                             time={`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`}/></div>)
+                                             time={`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`}
+                                             liked={liked.includes(result.id)}
+                                             receiveFav={receiveFav}
+                                /></div>)
                             }
                         ) : <div
                             className="absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] w-12 h-12 rounded-full border-4 border-gray-300 border-t-transparent animate-spin"></div>
                 }
-            </div> : <a href={`https://accounts.spotify.com/authorize?${authParamsUser.toString()}`}>Click me</a>}
+            </div> : <a href={`https://accounts.spotify.com/authorize?${authParamsUser.toString()}`} className={'absolute left-[50%] top-[50%] translate-x-[-50%] p-4 bg-[#00cc00] rounded-[8px]'}>Authorization</a>}
 
         </div>
     );

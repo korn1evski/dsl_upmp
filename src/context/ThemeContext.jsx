@@ -26,6 +26,7 @@ export const ThemeProvider = ({initialTheme, children}) => {
     const [playingImage, setPlayingImage] = useState('')
     const [isPlaying, setIsPlaying] = useState(true)
     const [playingProgress, setPlayingProgress] = useState(0)
+    const [playerDuration, setPlayerDuration] = useState(0)
 
 
     const rawSetTheme = (theme) => {
@@ -62,7 +63,9 @@ export const ThemeProvider = ({initialTheme, children}) => {
             isPlaying,
             setIsPlaying,
             playingProgress,
-            setPlayingProgress
+            setPlayingProgress,
+            playerDuration,
+            setPlayerDuration
         }}>{children}</ThemeContext.Provider>
     )
 }

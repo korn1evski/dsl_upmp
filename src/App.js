@@ -7,6 +7,7 @@ import Search from "./routes/Search";
 import MiniPlayer from "./components/MiniPlayer";
 import MenuText from "./components/MenuText"
 import Menu from './components/Menu'
+import Favorite from "./routes/Favorite"
 
 function App() {
   const [isShown, setIsShown] = useState(window.innerWidth >= 1000)
@@ -28,6 +29,7 @@ function App() {
 
         <Routes>
           <Route path='/' element={<Search isShown={isShown} setIsShown={setIsShown}/>}/>
+          <Route path='/favorite' element={<Favorite isShown={isShown} setIsShown={setIsShown}/>}/>
         </Routes>
         <MiniPlayer author={'Drake'} name={'Savage'} progress={30}/>
       </div>

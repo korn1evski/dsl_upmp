@@ -21,16 +21,18 @@ function Menu({isShown, setIsShown}) {
                     <RxCross2 className={'text-primary mt-4 xl:hidden mb-10'} size={35} onClick={() => {
                         setIsShown(!isShown)
                     }}/>
-                    <img
-                        src={theme === 'dark' ? require("../assets/mood_core.png") : require("../assets/logo_light.png")}
-                        alt="logo" className={'w-[82px] h-[46px] mt-[35px] mb-[25px]'}/>
+                    <Link to={'/'}>
+                        <img
+                            src={theme === 'dark' ? require("../assets/mood_core.png") : require("../assets/logo_light.png")}
+                            alt="logo" className={'w-[82px] h-[46px] mt-[35px] mb-[25px]'}/>
+                    </Link>
                     <Link to={''}>
                         <MenuText text={"search"} selected={true} margin={true}/>
                     </Link>
                     <Link to={''}>
                         <MenuText text={"your library"} selected={false} margin={true}/>
                     </Link>
-                    <Link to={''}>
+                    <Link to={'/favorite'}>
                         <MenuText text={"favorite"} selected={false} margin={false}/>
                     </Link>
                 </div>

@@ -1,18 +1,91 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import pictRec from "../assets/song.jpg";
 import { ThemeContext} from '../context/ThemeContext';
 import SpotifyPlayer from 'react-spotify-web-playback';
+import {DEVICE_ID} from "../spotify_keys.js"
 
 
 function MiniPlayer({props, author, name, progress}) {
-    const {theme, setTheme, contextAccessToken, playingUri, playingName, playingAuthor, playingImage, isPlaying, setIsPlaying, playingProgress, setPlayingProgress} = useContext(ThemeContext);
+    const {theme, setTheme, contextAccessToken, playingUri, playingName, playingAuthor, playingImage, isPlaying, setIsPlaying, playingProgress, setPlayingProgress, playerDuration, setPlayerDuration} = useContext(ThemeContext);
 
     const size = {
         width: '100%',
         height: 100,
     };
 
-    const handleClick = (event) => {
+    useEffect(() => {
+        setInterval(async()=>{
+            await changePlayingPos()
+        }, 1000)
+    }, [])
+
+
+    const playSong = async () => {
+
+        let param = {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        };
+
+        fetch(`https://api.spotify.com/v1/me/player/play?device_id=${DEVICE_ID}`, param)
+            .then(result => result.json())
+            .then(data => {
+                console.log(data)
+            });
+    };
+
+    const seekPlayingPos = async (pos) => {
+
+        let param = {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        };
+
+
+        fetch(`https://api.spotify.com/v1/me/player/seek?position_ms=${pos}&device_id=${DEVICE_ID}`, param)
+            .then(result => result.json())
+            .then(data => {
+                console.log(data)
+            });
+    };
+
+    const changePlayingPos = async () => {
+
+        let param = {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        };
+
+        fetch(`https://api.spotify.com/v1/me/player`, param)
+            .then(result => result.json())
+            .then(data => {
+                setPlayingProgress((data.progress_ms * 100)/ data.item.duration_ms )
+            });
+    };
+
+    const pauseSong = async () => {
+
+        let param = {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        };
+
+        fetch(`https://api.spotify.com/v1/me/player/pause?device_id=${DEVICE_ID}`, param)
+            .then(result => result.json())
+            .then(data => {
+                console.log(data)
+            });
+    };
+
+    const handleClick = async (event) => {
         const divElement = document.getElementById('total_progress');
         const { left, width } = divElement.getBoundingClientRect();
         const clickPosition = event.clientX - left;
@@ -20,6 +93,7 @@ function MiniPlayer({props, author, name, progress}) {
 
         setPlayingProgress(percentage)
 
+        await seekPlayingPos(Math.floor(playerDuration / 100 * percentage))
 
     };
 
@@ -39,7 +113,15 @@ function MiniPlayer({props, author, name, progress}) {
             </div>
             <div className={'flex md:pr-[30px] pr-[10px] justify-between 2xl:w-[13%] md:w-[20%] w-[20%]'}>
                 <img src={theme === 'dark' ? require('../assets/prev.png') : require('../assets/prev_black.png')} className={'w-auto 2xl:h-auto md:h-[30px] h-[20px]'}alt=""/>
-                <img onClick={() => setIsPlaying(!isPlaying)} src={isPlaying ? (theme === 'dark' ? require('../assets/stop.png') : require('../assets/stop_black.png')) : (theme === 'dark' ? require('../assets/play_white.png') : require('../assets/play_black.png'))} className={'w-auto 2xl:h-auto md:h-[30px] h-[20px]'} alt=""/>
+                <img onClick={async () => {
+                    setIsPlaying(!isPlaying)
+                    if(isPlaying == false)
+                        await playSong()
+                    else
+                        await pauseSong()
+
+                }
+                } src={isPlaying ? (theme === 'dark' ? require('../assets/stop.png') : require('../assets/stop_black.png')) : (theme === 'dark' ? require('../assets/play_white.png') : require('../assets/play_black.png'))} className={'w-auto 2xl:h-auto md:h-[30px] h-[20px]'} alt=""/>
                 <img src={theme === 'dark' ? require('../assets/next.png') : require('../assets/next_black.png')} className={'w-auto 2xl:h-auto md:h-[30px] h-[20px]'} alt=""/>
             </div>
         </div> : null
