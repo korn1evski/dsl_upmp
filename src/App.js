@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react'
 import {Routes, Route, Link} from 'react-router-dom';
-import { ThemeProvider } from './context/ThemeContext';
+import { ThemeProvider, ThemeContext} from './context/ThemeContext';
 import axios from 'axios';
 import {RxCross2, RxDotsHorizontal, RxHeart} from 'react-icons/rx'
 import Search from "./routes/Search";
@@ -22,9 +22,9 @@ function App() {
   // style={{backgroundImage: require("./assets/menu_gradient.png")}}
 
   return <ThemeProvider>
-    <div className={'flex w-full h-screen overflow-x-hidden'}>
+    <div className={'flex w-full h-screen overflow-x-hidden bg-leftMenu-gradient'}>
      <Menu isShown={isShown} setIsShown={setIsShown}/>
-      <div className={window.innerWidth < 786 ? isShown ? 'w-0 duration-300 transition-all ease-in-out overflow-y-scroll' : 'w-full h-full duration-300 transition-all ease-in-out overflow-y-scroll' : 'h-full w-full transition-all overflow-y-scroll'}>
+      <div className={window.innerWidth < 786 ? isShown ? 'w-0 duration-300 transition-all ease-in-out overflow-y-scroll bg-leftMenu-gradient' : 'w-full h-full duration-300 transition-all ease-in-out overflow-y-scroll bg-leftMenu-gradient' : 'h-screen w-full relative transition-all overflow-y-scroll bg-leftMenu-gradient'}>
 
         <Routes>
           <Route path='/' element={<Search isShown={isShown} setIsShown={setIsShown}/>}/>

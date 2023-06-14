@@ -7,16 +7,6 @@ from search import search
 app = Flask(__name__)
 CORS(app)
 
-@app.before_request
-def before_request():
-    if request.method == 'OPTIONS':
-        headers = {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'POST, GET',
-            'Access-Control-Allow-Headers': 'Content-Type'
-        }
-        return ('', 204, headers)
-
 
 
 @app.route('/api',methods=['POST','GET'])
@@ -30,6 +20,7 @@ def home():
         return response
     else:
         return "fucking error bitch"
+
 
 
 
