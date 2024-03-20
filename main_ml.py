@@ -8,6 +8,26 @@ from sklearn.linear_model import SGDRegressor
 from sklearn.linear_model import ElasticNet
 import numpy as np
 
+# THIS PART OF CODE IS ONLY IN USE FOR DATA ANALYSIS
+teams = pd.read_csv("teams.csv")
+
+teams = teams[["team", "country", "year", "athletes", "age", "prev_medals", "medals"]]
+
+# WE USED THE CORRELATION PRINCIPLE IN ORDER TO IDENTIFY THE NECESSARY COLUMNS IN ORDER TO BUILD OUR MODELS
+calc_corr_for_teams = teams[["year", "athletes", "age", "prev_medals", "medals"]]
+corr_values = calc_corr_for_teams.corr()["medals"]
+
+print(corr_values)
+
+# THIS GRAPH SHOWS HOW SIGNIFICANT THE CORRELATION BETWEEN THE NUMBER OF ATHLETES THAT PARTICIPATED
+# AND THE NUMBER OF MEDALS IS.
+# AS A RESULT OF THE ANALYSIS WE ARE GOING TO BUILD OUR MODELS BASED ON THESE TWO VALUES
+sns.lmplot(x="athletes", y="medals", data=calc_corr_for_teams, fit_reg=True, ci=None)
+plt.title("Relationship between Athletes and Medals")
+plt.xlabel("Number of Athletes")
+plt.ylabel("Number of Medals")
+plt.show()
+
 # THIS SINGLE ROW IS EXTREMELY IMPORTANT AS IT REMOVES THE ROWS WHERE THERE IS NAN INFO WHICH WOULD HAVE
 # SIGNIFICANTLY INFLUENCED OUR RESULTS IF WASN'T DONE.
 teams = teams.dropna()
