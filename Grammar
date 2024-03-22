@@ -1,7 +1,8 @@
-***
 <DSL> ::= <Statement> | <ModelDeclaration> | <TrainCommand> | <PredictCommand> |<ErrorRatioCommand>
 
 <Statement> ::= <ModelDeclaration> | <TrainCommand> | <PredictCommand> | <ErrorRatioCommand>
+
+<Importing> ::= "import" <Identifier> "." "Extension"
 
 <ModelDeclaration> ::= "model" <Identifier> "=" "new" <ModelType> "(" <RegressionType> ")"
 
@@ -23,5 +24,4 @@
 
 <Target> ::= <Identifier>
 
-<ColumnList> ::= <Identifier> ("," <Identifier>)
-***
+<ColumnList> ::= <Identifier> ("," <Identifier>)*
