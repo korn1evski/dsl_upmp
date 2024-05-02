@@ -154,11 +154,8 @@ def upload_file():
 @app.route('/predict', methods=['POST'])
 def predict():
     data = request.json
-    selected_columns = data['selectedColumns']
 
-    print(data['selectedColumns'][0], data['selectedColumns'][1], globalFileName)
-
-    predictor = SalesPredictor('Sales.csv', 'date', 'sales')
+    predictor = SalesPredictor(globalFileName, data['selectedColumns'][0], data['selectedColumns'][1])
     temp = predictor.run()
 
     return jsonify(temp)
