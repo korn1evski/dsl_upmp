@@ -28,17 +28,6 @@ result = {}
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-
-def str_to_bool(value):
-    """Converts 'True' and 'False' strings to corresponding boolean values, case-insensitively."""
-    if isinstance(value, str):
-        if value.lower() == 'true':
-            return True
-        elif value.lower() == 'false':
-            return False
-    return value
-
-
 def read_row(filename, row_num):
     with open(filename, 'r') as file:
         for i, line in enumerate(file):
@@ -59,6 +48,19 @@ def increment_row(filename, row_num):
             file.writelines(lines)
     else:
         print(f"Row number {row_num} is out of bounds.")
+
+
+def str_to_bool(value):
+    """Converts 'True' and 'False' strings to corresponding boolean values, case-insensitively."""
+    if isinstance(value, str):
+        if value.lower() == 'true':
+            return True
+        elif value.lower() == 'false':
+            return False
+    return value
+
+
+
 
 
 def allowed_file(filename):
